@@ -21,6 +21,6 @@ let fnSignIn = async (ctx, next) => {
 
 
 module.exports = {
-  'GET/': fnIndex,
-  'POST/': fnSignIn
+  'GET /': fnIndex,
+  'POST /': fnSignIn
 }
