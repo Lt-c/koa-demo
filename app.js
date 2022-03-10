@@ -1,11 +1,47 @@
+// koa 的demo
 const fs = require('fs');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const app = new Koa();
 // 引入中间件
 const controller = require('./controller');
+// 引入nunjucks
+const nunjucks = require('nunjucks');
 
-app.use(controller())
+// app.use(controller())
+
+function createEnv(path, opts) {
+  var
+    autoescape = opts.autoescape === undefined ? true : opts.autoescape,
+    noCache = opts.noCache || false,
+    watch = opts.watch || false,
+    throwOnUndefined = opts.throwOnUndefined || false,
+    env = new nunjucks.Environment(
+      new nunjucks.FileSystemLoader('views', {
+        noCache,
+        watch
+      }), {
+      autoescape,
+      throwOnUndefined
+    });
+  if (opts.filters) {
+    for (let f in opts.filters) {
+      env.addFilter(f, opts.filters[f])
+    }
+  }
+}
+
+let env = createEnv('views', {
+  watch: true,
+  filters: {
+    hex(n) {
+      return '0x' + n.toString(16)
+    }
+  }
+})
+
+let s = env.render('hello.html', { name: 'liu' })
+console.log(s);
 
 
 // let files = fs.readdirSync(__dirname + '/controllers');
